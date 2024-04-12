@@ -1,6 +1,11 @@
-use std::{
-    io::{stdin, BufRead}
-};
+use std::io::{stdin, BufRead};
+
+use services::play;
+use services::print_table;
+use services::player_won;
+use services::is_there_a_tie;
+
+pub mod services;
 
 fn main() {
     let mut table: [[char; 3]; 3] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
@@ -14,6 +19,12 @@ fn main() {
         let mut buffer = String::new();
 
         loop {
+            if is_first_player {
+                println!("1st player: ");
+            }else{
+                println!("2nd player: ");
+            }
+
             stdin().lock()
                 .read_line(&mut buffer)
                 .expect("Failed to read a number.");
@@ -32,7 +43,9 @@ fn main() {
             Err(error) => panic!("Problem converting String to usize: {:?}", error)
         };
 
-        while !play(is_first_player, player_input, &mut table) {}
+        if !play(is_first_player, player_input, &mut table) {
+            is_first_player = !is_first_player;
+        }
     }
 
     if player_won(&table) {
@@ -48,64 +61,4 @@ fn main() {
     }
 
     print_table(table);
-}
-
-fn play(is_first_player: bool, player_input: usize, table: &mut [[char; 3]; 3]) -> bool {
-    if table[(player_input - 1) / 3][(player_input - 1) % 3].is_digit(10) {
-        if is_first_player {
-            table[(player_input - 1) / 3][(player_input - 1) % 3] = 'X';
-        }else{
-            table[(player_input - 1) / 3][(player_input - 1) % 3] = 'O';
-        }
-
-        return true;
-    }else{
-        println!("This place is already played.");
-
-        return false;
-    }
-}
-
-fn print_table(table: [[char; 3]; 3]) {
-    println!("-------");
-    for row in table {
-        for cell in row {
-            print!("|{cell}");
-        }
-        print!("|\n-------\n")
-    }
-}
-
-fn player_won(table: &[[char; 3]; 3]) -> bool {
-    for i in 0..3 {
-        if table[i][0] == table[i][1] && table[i][0] == table[i][2] {
-            return true;
-        }
-
-        if table[0][i] == table[1][i] && table[0][i] == table[2][i] {
-            return true;
-        }
-    }
-
-    if table[0][0] == table[1][1] && table[0][0] == table[2][2] {
-        return true;
-    }
-    
-    if table[0][2] == table[1][1] && table[0][2] == table[2][0] {
-        return true;
-    }
-
-    return false;
-}
-
-fn is_there_a_tie(table: &[[char; 3]; 3]) -> bool {
-    return !table[0][0].is_digit(10) 
-    && !table[0][1].is_digit(10) 
-    && !table[0][2].is_digit(10) 
-    && !table[1][0].is_digit(10) 
-    && !table[1][1].is_digit(10) 
-    && !table[1][2].is_digit(10) 
-    && !table[2][0].is_digit(10) 
-    && !table[2][1].is_digit(10) 
-    && !table[2][2].is_digit(10);
 }
