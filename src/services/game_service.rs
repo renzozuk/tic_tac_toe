@@ -1,4 +1,10 @@
 pub fn play(is_first_player: bool, player_input: usize, table: &mut [[char; 3]; 3]) -> bool {
+    if player_input < 1 || player_input > 9 {
+        println!("Invalid input.");
+
+        return false;
+    }
+
     if table[(player_input - 1) / 3][(player_input - 1) % 3].is_digit(10) {
         if is_first_player {
             table[(player_input - 1) / 3][(player_input - 1) % 3] = 'X';
