@@ -4,12 +4,16 @@ use services::play;
 use services::print_table;
 use services::player_won;
 use services::is_there_a_tie;
+use services::show_instructions;
 
 pub mod services;
 
 fn main() {
     let mut table: [[char; 3]; 3] = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+
     let mut is_first_player = false;
+
+    show_instructions();
     
     while !player_won(&table) && !is_there_a_tie(&table) {
         print_table(table);
@@ -48,6 +52,8 @@ fn main() {
         }
     }
 
+    print_table(table);
+
     if player_won(&table) {
         if is_first_player {
             println!("The first player won the game!!!");
@@ -59,6 +65,4 @@ fn main() {
     if is_there_a_tie(&table) {
         println!("That's a tie!!!");
     }
-
-    print_table(table);
 }
