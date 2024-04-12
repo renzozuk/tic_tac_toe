@@ -39,7 +39,7 @@ pub fn player_won(table: &[[char; 3]; 3]) -> bool {
 }
 
 pub fn is_there_a_tie(table: &[[char; 3]; 3]) -> bool {
-    return !table[0][0].is_digit(10) 
+    return !player_won(table) && !table[0][0].is_digit(10) 
     && !table[0][1].is_digit(10) && !table[0][2].is_digit(10) 
     && !table[1][0].is_digit(10) && !table[1][1].is_digit(10) 
     && !table[1][2].is_digit(10) && !table[2][0].is_digit(10) 
